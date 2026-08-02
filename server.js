@@ -6,7 +6,8 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const socketAuth = require("./middleware/socketAuth");
-const Message = require("./models/Message"); // <-- NEW: add this import up here with the others
+const messageRoutes = require("./routes/messages");
+const Message = require("./models/Message"); 
 
 connectDB();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.get("/", (req, res) => {
   res.send("Chat app server is alive!");
@@ -28,15 +30,14 @@ const io = new Server(server, {
 
 io.use(socketAuth);
 
-const onlineUsers = new Map(); // <-- NEW: declare this once, outside the connection handler
+const onlineUsers = new Map(); 
 
 io.on("connection", (socket) => {
   const userId = socket.user._id.toString();
   console.log(`${socket.user.username} connected:`, socket.id);
 
-  onlineUsers.set(userId, socket.id); // <-- NEW
+  onlineUsers.set(userId, socket.id); 
 
-  // --- NEW: the actual messaging event ---
   socket.on("sendMessage", async ({ receiverId, content }) => {
     try {
       if (!receiverId || !content?.trim()) return;
@@ -57,7 +58,20 @@ io.on("connection", (socket) => {
       socket.emit("errorMessage", { message: "Message failed to send" });
     }
   });
-  // --- end new block ---
+
+  socket.on("typing", ({ receiverId }) => {
+  const receiverSocketId = onlineUsers.get(receiverId);
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("userTyping", { userId });
+  }
+});
+
+socket.on("stopTyping", ({ receiverId }) => {
+  const receiverSocketId = onlineUsers.get(receiverId);
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("userStopTyping", { userId });
+  }
+});
 
   socket.on("disconnect", () => {
     console.log(`${socket.user.username} disconnected:`, socket.id);
