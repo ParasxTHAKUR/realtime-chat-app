@@ -37,6 +37,7 @@ io.on("connection", (socket) => {
   console.log(`${socket.user.username} connected:`, socket.id);
 
   onlineUsers.set(userId, socket.id); 
+  socket.broadcast.emit("userOnline", { userId });
 
   socket.on("sendMessage", async ({ receiverId, content }) => {
     try {
@@ -75,7 +76,8 @@ socket.on("stopTyping", ({ receiverId }) => {
 
   socket.on("disconnect", () => {
     console.log(`${socket.user.username} disconnected:`, socket.id);
-    onlineUsers.delete(userId); // <-- NEW
+    onlineUsers.delete(userId);
+    socket.broadcast.emit("userOffline", { userId });
   });
 });
 
