@@ -12,6 +12,9 @@ const Message = require("./models/Message");
 connectDB();
 
 const app = express();
+const cors = require("cors");
+
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.static("public"));
 app.use("/api/auth", authRoutes);
@@ -31,6 +34,8 @@ const io = new Server(server, {
 io.use(socketAuth);
 
 const onlineUsers = new Map(); 
+
+
 
 io.on("connection", (socket) => {
   const userId = socket.user._id.toString();
@@ -74,7 +79,8 @@ socket.on("stopTyping", ({ receiverId }) => {
   }
 });
 
-  socket.on("disconnect", () => {
+  
+socket.on("disconnect", () => {
     console.log(`${socket.user.username} disconnected:`, socket.id);
     onlineUsers.delete(userId);
     socket.broadcast.emit("userOffline", { userId });
