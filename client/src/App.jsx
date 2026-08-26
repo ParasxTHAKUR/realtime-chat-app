@@ -4,6 +4,7 @@ import { useAuth } from "./context/useAuth";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ContactList from "./components/ContactList";
+import ChatWindow from "./components/ChatWindow";
 
 function ChatPage() {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -14,13 +15,7 @@ function ChatPage() {
         onSelectUser={setSelectedUser}
         selectedUserId={selectedUser?._id}
       />
-      <div>
-        {selectedUser ? (
-          <h2>Chatting with {selectedUser.username}</h2>
-        ) : (
-          <p>Select a user to start chatting</p>
-        )}
-      </div>
+      <ChatWindow otherUser={selectedUser} />
     </div>
   );
 }
