@@ -89,28 +89,26 @@ function ChatWindow({ otherUser }) {
   }
 
   return (
-    <div>
-      <h2>Chatting with {otherUser.username}</h2>
+    <div className="chat-area">
+      <div className="chat-header">Chatting with {otherUser.username}</div>
 
-      <div
-        style={{ height: "300px", overflowY: "auto", border: "1px solid #ccc" }}
-      >
+      <div className="messages-container">
         {messages.map((m) => (
-          <p
+          <div
             key={m._id}
-            style={{ textAlign: m.sender === user._id ? "right" : "left" }}
+            className={`message-bubble ${m.sender === user._id ? "sent" : "received"}`}
           >
             {m.content}
-          </p>
+          </div>
         ))}
         <div ref={bottomRef} />
       </div>
 
-      <p style={{ height: "20px", fontSize: "12px", color: "#666" }}>
+      <p className="typing-indicator">
         {isOtherTyping ? `${otherUser.username} is typing...` : ""}
       </p>
 
-      <form onSubmit={handleSend}>
+      <form className="message-input-form" onSubmit={handleSend}>
         <input
           value={text}
           onChange={handleTextChange}

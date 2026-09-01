@@ -10,7 +10,7 @@ function ChatPage() {
   const [selectedUser, setSelectedUser] = useState(null);
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="app-layout">
       <ContactList
         onSelectUser={setSelectedUser}
         selectedUserId={selectedUser?._id}

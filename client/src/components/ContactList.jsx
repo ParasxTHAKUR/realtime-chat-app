@@ -13,20 +13,23 @@ function ContactList({ onSelectUser, selectedUserId }) {
   }, []);
 
   return (
-    <ul>
-      {users.map((u) => (
-        <li
-          key={u._id}
-          onClick={() => onSelectUser(u)}
-          style={{
-            fontWeight: selectedUserId === u._id ? "bold" : "normal",
-            cursor: "pointer",
-          }}
-        >
-          {u.username} {onlineUserIds.includes(u._id) ? "🟢" : "⚪"}
-        </li>
-      ))}
-    </ul>
+    <div className="sidebar">
+      <div className="sidebar-header">Chats</div>
+      <ul className="contact-list">
+        {users.map((u) => (
+          <li
+            key={u._id}
+            onClick={() => onSelectUser(u)}
+            className={`contact-item ${selectedUserId === u._id ? "active" : ""}`}
+          >
+            {u.username}
+            <span
+              className={`status-dot ${onlineUserIds.includes(u._id) ? "online" : "offline"}`}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
