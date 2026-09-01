@@ -8,18 +8,17 @@ function ChatWindow({ otherUser }) {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
+  const [isOtherTyping, setIsOtherTyping] = useState(false);
   const bottomRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
-  // Load history whenever the selected conversation changes
   useEffect(() => {
     if (!otherUser) return;
-
     api.get(`/messages/${otherUser._id}`).then((res) => {
       setMessages(res.data);
     });
   }, [otherUser]);
 
-  // Listen for live incoming messages
   useEffect(() => {
     if (!socket) return;
 
@@ -31,17 +30,46 @@ function ChatWindow({ otherUser }) {
       }
     };
 
+    const handleTyping = ({ userId }) => {
+      if (userId === otherUser?._id) setIsOtherTyping(true);
+    };
+
+    const handleStopTyping = ({ userId }) => {
+      if (userId === otherUser?._id) setIsOtherTyping(false);
+    };
+
     socket.on("receiveMessage", handleReceive);
+    socket.on("userTyping", handleTyping);
+    socket.on("userStopTyping", handleStopTyping);
 
     return () => {
       socket.off("receiveMessage", handleReceive);
+      socket.off("userTyping", handleTyping);
+      socket.off("userStopTyping", handleStopTyping);
     };
   }, [socket, otherUser]);
 
-  // Auto-scroll to the latest message
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Reset "is typing" display whenever you switch conversations
+  useEffect(() => {
+    setIsOtherTyping(false);
+  }, [otherUser]);
+
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+
+    if (!socket || !otherUser) return;
+
+    socket.emit("typing", { receiverId: otherUser._id });
+
+    clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit("stopTyping", { receiverId: otherUser._id });
+    }, 1500);
+  };
 
   const handleSend = (e) => {
     e.preventDefault();
@@ -51,6 +79,8 @@ function ChatWindow({ otherUser }) {
       receiverId: otherUser._id,
       content: text.trim(),
     });
+    socket.emit("stopTyping", { receiverId: otherUser._id });
+    clearTimeout(typingTimeoutRef.current);
     setText("");
   };
 
@@ -76,10 +106,14 @@ function ChatWindow({ otherUser }) {
         <div ref={bottomRef} />
       </div>
 
+      <p style={{ height: "20px", fontSize: "12px", color: "#666" }}>
+        {isOtherTyping ? `${otherUser.username} is typing...` : ""}
+      </p>
+
       <form onSubmit={handleSend}>
         <input
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={handleTextChange}
           placeholder="Type a message..."
         />
         <button type="submit">Send</button>
