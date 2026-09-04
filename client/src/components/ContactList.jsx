@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useSocket } from "../context/useSocket";
+import { useAuth } from "../context/useAuth";
 
 function ContactList({ onSelectUser, selectedUserId }) {
   const [users, setUsers] = useState([]);
   const { onlineUserIds } = useSocket();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     api.get("/users").then((res) => {
@@ -14,7 +16,12 @@ function ContactList({ onSelectUser, selectedUserId }) {
 
   return (
     <div className="sidebar">
-      <div className="sidebar-header">Chats</div>
+      <div className="sidebar-header">
+        <span>{user.username}</span>
+        <button className="logout-btn" onClick={logout}>
+          Logout
+        </button>
+      </div>
       <ul className="contact-list">
         {users.map((u) => (
           <li

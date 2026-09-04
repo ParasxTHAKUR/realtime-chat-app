@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ContactList from "./components/ContactList";
 import ChatWindow from "./components/ChatWindow";
+import "./App.css";
 
 function ChatPage() {
   const [selectedUser, setSelectedUser] = useState(null);

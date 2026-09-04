@@ -28,6 +28,10 @@ export function SocketProvider({ children }) {
       setOnlineUserIds((prev) => prev.filter((id) => id !== userId));
     });
 
+    newSocket.on("onlineUsersList", (userIds) => {
+      setOnlineUserIds(userIds);
+    });
+
     return () => {
       newSocket.disconnect();
       socketRef.current = null;

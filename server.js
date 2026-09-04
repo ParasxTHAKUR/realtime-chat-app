@@ -42,6 +42,7 @@ io.on("connection", (socket) => {
   console.log(`${socket.user.username} connected:`, socket.id);
 
   onlineUsers.set(userId, socket.id); 
+  socket.emit("onlineUsersList", Array.from(onlineUsers.keys()));
   socket.broadcast.emit("userOnline", { userId });
 
   socket.on("sendMessage", async ({ receiverId, content }) => {

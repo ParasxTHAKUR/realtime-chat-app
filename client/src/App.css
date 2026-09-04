@@ -136,3 +136,89 @@
   border-radius: 20px;
   font-weight: 600;
 }
+.auth-page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+}
+
+.auth-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 360px;
+}
+
+.auth-card h2 {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-card input {
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+.auth-card input:focus {
+  border-color: #0084ff;
+}
+
+.auth-card button {
+  padding: 12px;
+  background: #0084ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.auth-card button:hover {
+  background: #006fd6;
+}
+
+.auth-error {
+  color: #d32f2f;
+  font-size: 13px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.auth-switch {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.auth-switch a {
+  color: #0084ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+.logout-btn {
+  padding: 6px 12px;
+  background: transparent;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.logout-btn:hover {
+  background: #d32f2f;
+  color: white;
+}
