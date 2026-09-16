@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: { origin: "https://your-app.vercel.app" },
 });
 
 io.use(socketAuth);
