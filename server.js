@@ -14,7 +14,13 @@ connectDB();
 const app = express();
 const cors = require("cors");
 
-app.use(cors({ origin: "*" }));
+app.use(
+  cors({
+    origin: "https://realtime-chat-app-5-0bnv.onrender.com/",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.static("public"));
 app.use("/api/auth", authRoutes);
