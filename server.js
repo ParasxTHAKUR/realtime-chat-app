@@ -14,10 +14,15 @@ connectDB();
 const app = express();
 const cors = require("cors");
 
+const allowedOrigins = [
+  "https://realtime-chat-app-l9ad.vercel.app",
+  "https://realtime-chat-app-l9ad-git-main-paras-team4.vercel.app"
+];
+
 app.use(
   cors({
-    origin: "https://realtime-chat-app-l9ad-git-main-paras-team4.vercel.app",
-    credentials: true,
+    origin: allowedOrigins,
+    credentials: true
   })
 );
 
@@ -34,7 +39,10 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: "https://your-app.vercel.app" },
+  cors: {
+    origin: allowedOrigins,
+    credentials: true
+  }
 });
 
 io.use(socketAuth);
