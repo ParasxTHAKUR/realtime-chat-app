@@ -16,7 +16,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "https://realtime-chat-app-l9ad.vercel.app",
+    origin: "https://realtime-chat-app-l9ad-git-main-paras-team4.vercel.app",
     credentials: true,
   })
 );
