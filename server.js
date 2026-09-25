@@ -16,7 +16,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "https://realtime-chat-app-5-0bnv.onrender.com/",
+    origin: "https://realtime-chat-app-l9ad.vercel.app",
     credentials: true,
   })
 );
